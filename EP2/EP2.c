@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX_LETRAS 20 /*  Máximo de letras que uma palavras da entrada pode ter */
+#define MAX_LETRAS 20 /*  Mï¿½ximo de letras que uma palavras da entrada pode ter */
 
 #define DIREITA 'd'
 #define BAIXO 'b'
@@ -80,7 +80,7 @@ int maximo(int a, int b){
 
 void cria_matriz_char(char **M, int linhas, int colunas){
     int i;
-    M = malloc(linhas * sizeof(char));
+    M = malloc(linhas * sizeof(char *));
     for(i=0; i < linhas; i++){
         M[i] = malloc(colunas * sizeof(char));
     }
@@ -100,8 +100,8 @@ void imprime_matriz_char(char **M, int linhas, int colunas){
 }
 
 
-/* Esta struct guarda onde um espaço disponível na matriz começa e em que direção vai.
-   A variável pos define um inteiro que serve para auxiliar na permutação da struct numa lista.  */
+/* Esta struct guarda onde um espaï¿½o disponï¿½vel na matriz comeï¿½a e em que direï¿½ï¿½o vai.
+   A variï¿½vel pos define um inteiro que serve para auxiliar na permutaï¿½ï¿½o da struct numa lista.  */
 typedef struct{
     int pos;
     int usado;
@@ -170,7 +170,7 @@ posicao TopoDaPilha_posicoes(Pilha_posicoes P)
   return (P->v[P->topo - 1]);
 }
 
-/* Cria uma lista (natriz) em que se pode pôr linhas*colunas posições. */
+/* Cria uma lista (natriz) em que se pode pï¿½r linhas*colunas posiï¿½ï¿½es. */
 posicao cria_lista_posicoes(int linhas, int colunas){
     int i;
     posicao **lista = malloc(linhas * sizeof(posicao));
@@ -181,7 +181,7 @@ posicao cria_lista_posicoes(int linhas, int colunas){
 }
 
 
-/* Recebe uma matriz com espaços e asteriscos e devolve uma matriz com as posições válidas de se pôr cada tamanho de palavra. */
+/* Recebe uma matriz com espaï¿½os e asteriscos e devolve uma matriz com as posiï¿½ï¿½es vï¿½lidas de se pï¿½r cada tamanho de palavra. */
 posicao lista_posicoes(char **matriz, int linhas, int colunas, posicao **lista){
     int i, j, k, aux;
     posicao auxiliar;
@@ -239,8 +239,8 @@ posicao lista_posicoes(char **matriz, int linhas, int colunas, posicao **lista){
 
 
 
-/* Esta struct guarda uma string, a quantiddade de caracteres que ela possui e o estado dela (se está dentro ou fora da matriz.
-   A variável posição define um inteiro que serve para auxiliar na permutação da struct numa lista.  */
+/* Esta struct guarda uma string, a quantiddade de caracteres que ela possui e o estado dela (se estï¿½ dentro ou fora da matriz.
+   A variï¿½vel posiï¿½ï¿½o define um inteiro que serve para auxiliar na permutaï¿½ï¿½o da struct numa lista.  */
 typedef struct{
     int posicao;
     int usado;
@@ -309,7 +309,7 @@ palavra TopoDaPilha_palavras(Pilha_palavras P)
 }
 
 
-/* Recebe uma string e devolve quantas letras há nela. */
+/* Recebe uma string e devolve quantas letras hï¿½ nela. */
 int conta_letras(char *palavra){
     int i = 0;
     while(palavra[i] != '\0')
@@ -347,7 +347,7 @@ int ser_letra(char ch){
     return 0;
 }
 
-/* Recebe o sentido para onde a palavra é escrita e, abstratamente falando, devolve uma dupla ordenada (*a, *b)
+/* Recebe o sentido para onde a palavra ï¿½ escrita e, abstratamente falando, devolve uma dupla ordenada (*a, *b)
    a qual pode ser (0,1) se o sentido for para baixo e (1,0) se for para a direita.  */
 void definir_sentido(char dir, int *a, int *b){
     if(dir == DIREITA){
@@ -360,7 +360,7 @@ void definir_sentido(char dir, int *a, int *b){
     }
 }
 
-/* Rcebe a e b, um deles, por suposição, nulo. Incrementa em uma unidade aquele que não for o nulo. */
+/* Rcebe a e b, um deles, por suposiï¿½ï¿½o, nulo. Incrementa em uma unidade aquele que nï¿½o for o nulo. */
 void aumenta_nao_nulos(int *a, int *b){
     if(*a == 0)
         (*b)++;
@@ -368,10 +368,10 @@ void aumenta_nao_nulos(int *a, int *b){
         (*a)++;
 }
 
-/* Recebe uma matriz de caracteres, uma posição dentro dela, uma palavra e uma pilha de letras.
-   Caso a palavra encaixe na matriz, partindo da posição dada, as letras que a palavra acrescenta à matriz.
-   Essas letras que foram postas matriz são empilhadas também. Nesse caso a função retorna 1.
-   Caso a palavra não encaixe, ela não é posta na matriz e a função retorna 0. */
+/* Recebe uma matriz de caracteres, uma posiï¿½ï¿½o dentro dela, uma palavra e uma pilha de letras.
+   Caso a palavra encaixe na matriz, partindo da posiï¿½ï¿½o dada, as letras que a palavra acrescenta ï¿½ matriz.
+   Essas letras que foram postas matriz sï¿½o empilhadas tambï¿½m. Nesse caso a funï¿½ï¿½o retorna 1.
+   Caso a palavra nï¿½o encaixe, ela nï¿½o ï¿½ posta na matriz e a funï¿½ï¿½o retorna 0. */
 int encaixa (char **matriz, posicao inicio, palavra palavra, Pilha letras){
     int a, b, k;
     posicao aux;
@@ -388,8 +388,8 @@ int encaixa (char **matriz, posicao inicio, palavra palavra, Pilha letras){
             }
 
             else{
-                /* Muita atenção aqui!! Neste momento, uso a parte "sentido" da struct posicao para poder compatibilzar
-                   o formato de entrada dos elementos da pilha, mas entende-se que se etsá empilhando letras aqui. */
+                /* Muita atenï¿½ï¿½o aqui!! Neste momento, uso a parte "sentido" da struct posicao para poder compatibilzar
+                   o formato de entrada dos elementos da pilha, mas entende-se que se etsï¿½ empilhando letras aqui. */
                 aux.sentido = palavra.string[k];
                 aux.i = inicio.i + a;
                 aux.j = inicio.j + b;
@@ -404,8 +404,8 @@ int encaixa (char **matriz, posicao inicio, palavra palavra, Pilha letras){
     return 1;
 }
 
-/*  Recebe uma lista de palavras, o tamanho dela e a última palavra contida nela que foi testada.
-    Permuta a última palavra testada e reorganiza a lista de palavras.  */
+/*  Recebe uma lista de palavras, o tamanho dela e a ï¿½ltima palavra contida nela que foi testada.
+    Permuta a ï¿½ltima palavra testada e reorganiza a lista de palavras.  */
 void permuta_palavra(int qtde, palavra *lista, palavra ultimo_testado){
     int i, j;
     palavra permutante;
@@ -419,8 +419,8 @@ void permuta_palavra(int qtde, palavra *lista, palavra ultimo_testado){
     }
 }
 
-/* Recebe uma lista de posicoes, o tamanho dela e a última posicao contida nela que foi testada.
-   Permuta a última posição testada e reorganiza a lista de posições.  */
+/* Recebe uma lista de posicoes, o tamanho dela e a ï¿½ltima posicao contida nela que foi testada.
+   Permuta a ï¿½ltima posiï¿½ï¿½o testada e reorganiza a lista de posiï¿½ï¿½es.  */
 void permuta_posicao(int qtde, posicao *lista, posicao ultimo_testado){
     int i, j;
     posicao permutante;
@@ -498,13 +498,13 @@ int backtracking(char **matriz, int linhas, int colunas, posicao **pos_lista, pa
 
 /*
        Cria a matriz dinamicamente e substitui os -1s por asteriscos.
-       Lista as posiçoes possíveis
+       Lista as posiï¿½oes possï¿½veis
        Conta as letras das palavras.
        Poe as palavras numa lista
 
-       Testa as permutaçoes enquato as palavras encaixarem
-       Se nao encaixar em uma posicao válida, tenta encaixar numa válida (permuta as posicoes)
-       Se acabar a lista e não houver posição válida, permuta as palavras e volta a tentar encaixar
+       Testa as permutaï¿½oes enquato as palavras encaixarem
+       Se nao encaixar em uma posicao vï¿½lida, tenta encaixar numa vï¿½lida (permuta as posicoes)
+       Se acabar a lista e nï¿½o houver posiï¿½ï¿½o vï¿½lida, permuta as palavras e volta a tentar encaixar
 
        Se todas as palavras foram postas (a lista toda ta com a variavel "usado" valendo 1
     */
@@ -554,4 +554,3 @@ int main()
     }
     return 0;
 }
-

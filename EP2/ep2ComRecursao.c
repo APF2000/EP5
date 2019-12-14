@@ -17,6 +17,18 @@ int size(char *string){
   return count;
 }
 
+void printMatrix(char **matrix, int lines, int cols){
+  int i, j;
+  printf("\n\nPrintingmatrix\n\n");
+  for(i = 0; i < lines; i++){
+    printf("\n");
+    for(j = 0; j < cols; j++){
+      printf("%c ", matrix[i][j]);
+    }
+  }
+  printf("\n\n");
+}
+
 char asterOrBlanck(int which){
   if(which == -1)
     return ASTERISK;
@@ -24,13 +36,40 @@ char asterOrBlanck(int which){
 }
 
 void recursion(char **crossWords, int lines, int cols,
-      char **words, int numWords, int wordsInserted){
+      char **words, int numWords, int wordsInserted, int nextWord){
+
+    int count = 0, i, j, aux;
 
     if(wordsInserted != numWords){
+      for(i = 0; i < lines; i++){
+        for(j = 0; j < cols; j++){
+          if(crossWords[i][j] == ASTERISK){
+            count = 0;
+          }else{
+            if(count == size(words[nextWord])){
+              for(aux = 0; aux < count; aux++){
+                crossWords[i][j - aux] = words[nextWord][count - 1 - aux];
+              }
+              nextWord = (nextWord + 1) % numWords;
+              wordsInserted++;
+              break;
+            }
+            count++;
+            if(crossWords[i][j] != words[nextWord][count]
+                && crossWords[i][j] != BLANCK){
+              printf("\nRecounting, crossWords={%c}", crossWords[i][j]);
+              count = 0;
+            }
+          }
+        }
+        if(count == size(words[nextWord])) break;
+      }
+      printMatrix(crossWords, lines, cols);
+
       if(1 < 2){
         wordsInserted++;
       }
-      recursion(crossWords, lines, cols, words, numWords, wordsInserted);
+      recursion(crossWords, lines, cols, words, numWords, wordsInserted, nextWord);
     }
     return;
 }
@@ -66,7 +105,7 @@ int main(){
       printf("\n%s, size=%d", words[i], size(words[i]));
     }
 
-    recursion(crossWords, numLines, numCols, words, aux, 0);
+    recursion(crossWords, numLines, numCols, words, aux, 0, 0);
   }
 
   return 0;

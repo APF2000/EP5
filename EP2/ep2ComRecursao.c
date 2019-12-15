@@ -49,6 +49,7 @@ void recursion(char **crossWords, int lines, int cols,
             if(count == size(words[nextWord])){
               for(aux = 0; aux < count; aux++){
                 crossWords[i][j - aux] = words[nextWord][count - 1 - aux];
+                printMatrix(crossWords, lines, cols);
               }
               nextWord = (nextWord + 1) % numWords;
               wordsInserted++;

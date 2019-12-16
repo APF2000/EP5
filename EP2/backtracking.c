@@ -98,7 +98,7 @@ int main(){
   int **board;
   int i, j;
 
-  for(j = 0; j < 20; j++){
+  for(j = 0; j < 28; j++){
     /*printf("\n------------------------\n");*/
     board = malloc(j * sizeof(int *));
     for(i = 0; i < j; i++){

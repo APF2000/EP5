@@ -13,6 +13,14 @@ typedef struct {
   int max;
 } stack;
 
+void printStack(stack* st){
+  int i;
+  printf("\n\nStack:");
+  for(i = 0; i < st->top; i++){
+    printf("\n(%d,%d)", st->v[st->top - i - 1].line, st->v[st->top - i - 1].col);
+  }
+}
+
 stack* createStack(int n){
   stack* aux = malloc(n * sizeof(stack));
 
@@ -44,9 +52,11 @@ void resize(stack* P){
 
 void stackUp(stack* P, queen q){
   if (P->top == P->max) resize(P);
-  printf("Stacking up (%d, %d)\n", q.line, q.col);
+  printf("Stacking up{ (%d, %d)\n", q.line, q.col);
+  printStack(P);
   P->v[P->top] = q;
   P->top ++;
+  printf("\n}");
 }
 
 int isEmpty(stack* P){
@@ -54,22 +64,19 @@ int isEmpty(stack* P){
 }
 
 queen unstack(stack* P){
+  printf("\nUstacking (%d, %d):{", P->v[P->top].line, P->v[P->top].col);
   if (isEmpty(P)) printf("\nERROR:Tried to unstack empty stack\n");
+  printStack(P);
+  printf("\n}");
   return P->v[P->top--];
 }
 
 queen top(stack* P){
   if (isEmpty(P)) printf("\nERROR:Tried to get top of empty stack\n");
+  printStack(P);
   return (P->v[P->top - 1]);
 }
 
-void printStack(stack* st){
-  int i;
-  printf("\n\nStack:");
-  for(i = 0; i < st->top; i++){
-    printf("\n(%d,%d)", st->v[st->top - i - 1].line, st->v[st->top - i - 1].col);
-  }
-}
 
 //////////////////////////////////////////////
 
@@ -166,19 +173,25 @@ int solveNQUtil(int **board, int n, int col){
 
 int backTrack(int **board, int n){
   stack* st = createStack(n);
-  int i, count = 0;
+  int i, count = 0, queenPut = 0;
   queen auxQueen;
 
   while(count != n){
+    printf("\n------------------------------\n");
     printf("count=%d\nantes do for\n", count);
     for(i = 0; i < n && !isSafe(board, n, i, count); i++);
-    printf("depois do for i=%d\n", i);
+    printf("depois do for i=%d, n=%d\n", i, n);
     if(i == n){
-      for(auxQueen = unstack(st); auxQueen.line == n - 1; count--)
+      for(auxQueen = unstack(st); auxQueen.line == n - 1; count--){
+        printf("\nVoltando rainha, count=%d, board=%d", count, board[auxQueen.line][count]);
         board[auxQueen.line][count] = 0;
+        printf("\nDepois, board=%d", board[auxQueen.line][count]);
+      }
+
       if(count == 0 && auxQueen.line == n - 1) return 0;
-      board[auxQueen.line][count] = 0;
-      auxQueen.line++;
+      board[auxQueen.line - 1][count - 1] = 0;
+      st->v[count - 1].line++;
+      board[auxQueen.line - 1][count - 1] = 1;
     }else{
       board[i][count] = 1;
       createQueen(&auxQueen, i, count);
@@ -186,7 +199,7 @@ int backTrack(int **board, int n){
       count++;
     }
     printMatrix(board, n, n);
-    printf("\n\n\n\n");
+    printf("\n\n");
   }
   return 1;
 }

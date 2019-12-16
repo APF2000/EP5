@@ -15,7 +15,7 @@ typedef struct {
 
 void printStack(stack* st){
   int i;
-  printf("\n\nStack:");
+  printf("\nStack:");
   for(i = 0; i < st->top; i++){
     printf("\n(%d,%d)", st->v[st->top - i - 1].line, st->v[st->top - i - 1].col);
   }
@@ -64,11 +64,11 @@ int isEmpty(stack* P){
 }
 
 queen unstack(stack* P){
-  printf("\nUstacking (%d, %d):{", P->v[P->top].line, P->v[P->top].col);
+  printf("\nUstacking (%d, %d):{", P->v[P->top-1].line, P->v[P->top-1].col);
   if (isEmpty(P)) printf("\nERROR:Tried to unstack empty stack\n");
   printStack(P);
   printf("\n}");
-  return P->v[P->top--];
+  return P->v[--P->top];
 }
 
 queen top(stack* P){
@@ -76,7 +76,6 @@ queen top(stack* P){
   printStack(P);
   return (P->v[P->top - 1]);
 }
-
 
 //////////////////////////////////////////////
 
@@ -182,16 +181,21 @@ int backTrack(int **board, int n){
     for(i = 0; i < n && !isSafe(board, n, i, count); i++);
     printf("depois do for i=%d, n=%d\n", i, n);
     if(i == n){
-      for(auxQueen = unstack(st); auxQueen.line == n - 1; count--){
-        printf("\nVoltando rainha, count=%d, board=%d", count, board[auxQueen.line][count]);
+      for(auxQueen = top(st); count > 0 && auxQueen.line == n - 1; count--){
+        printf("\nVoltando rainha, count=%d", count);
+        unstack(st);
+        auxQueen = top(st);
+        printf("\nNewTop: (%d, %d); count=%d; board[0][2]=%d", auxQueen.line, auxQueen.col, count, board[0][2]);
         board[auxQueen.line][count] = 0;
         printf("\nDepois, board=%d", board[auxQueen.line][count]);
       }
 
       if(count == 0 && auxQueen.line == n - 1) return 0;
+
       board[auxQueen.line - 1][count - 1] = 0;
       st->v[count - 1].line++;
-      board[auxQueen.line - 1][count - 1] = 1;
+      board[auxQueen.line][count - 1] = 1;
+
     }else{
       board[i][count] = 1;
       createQueen(&auxQueen, i, count);
@@ -210,7 +214,7 @@ int main(){
   int i, j;
 
   for(j = 4; j < 5; j++){
-    /*printf("\n------------------------\n");*/
+    /*printf("\n-- ----------------------\n");*/
     board = malloc(j * sizeof(int *));
     for(i = 0; i < j; i++){
       board[i] = malloc(j * sizeof(int));

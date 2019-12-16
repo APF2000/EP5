@@ -17,7 +17,7 @@ void printStack(stack* st){
   int i;
   printf("\nStack:");
   for(i = 0; i < st->top; i++){
-    printf("\n(%d,%d)", st->v[st->top - i - 1].line, st->v[st->top - i - 1].col);
+    printf("\n(%d,%d)", st->v[st->top - i].line, st->v[st->top - i].col);
   }
 }
 
@@ -54,8 +54,8 @@ void stackUp(stack* P, queen q){
   if (P->top == P->max) resize(P);
   printf("Stacking up{ (%d, %d)\n", q.line, q.col);
   printStack(P);
-  P->v[P->top] = q;
   P->top ++;
+  P->v[P->top] = q;
   printf("\n}");
 }
 
@@ -68,13 +68,13 @@ queen unstack(stack* P){
   if (isEmpty(P)) printf("\nERROR:Tried to unstack empty stack\n");
   printStack(P);
   printf("\n}");
-  return P->v[--P->top];
+  return P->v[P->top--];
 }
 
 queen top(stack* P){
   if (isEmpty(P)) printf("\nERROR:Tried to get top of empty stack\n");
   printStack(P);
-  return (P->v[P->top - 1]);
+  return (P->v[P->top]);
 }
 
 //////////////////////////////////////////////
@@ -149,7 +149,7 @@ int isSafe(int **board, int n, int line, int col){
   return 1;
 }
 
-int solveNQUtil(int **board, int n, int col){
+int recursive(int **board, int n, int col){
 
   int i;
 
@@ -161,7 +161,7 @@ int solveNQUtil(int **board, int n, int col){
       board[i][col] = 1;
       //printMatrix(board, n, n);
 
-      if(solveNQUtil(board, n, col+1))
+      if(recursive(board, n, col+1))
         return 1;
 
       board[i][col] = 0;
@@ -181,20 +181,25 @@ int backTrack(int **board, int n){
     for(i = 0; i < n && !isSafe(board, n, i, count); i++);
     printf("depois do for i=%d, n=%d\n", i, n);
     if(i == n){
+      printf("\nEntramos no for2?");
       for(auxQueen = top(st); count > 0 && auxQueen.line == n - 1; count--){
         printf("\nVoltando rainha, count=%d", count);
         unstack(st);
         auxQueen = top(st);
-        printf("\nNewTop: (%d, %d); count=%d; board[0][2]=%d", auxQueen.line, auxQueen.col, count, board[0][2]);
+        printf("\nNewTop: (%d, %d); count=%d", auxQueen.line, auxQueen.col, count);
+        printf("\nAntes: board[%d][%d]", auxQueen.line, count);
         board[auxQueen.line][count] = 0;
+        printf("\nDepois: board[%d][%d]", auxQueen.line, count);
         printf("\nDepois, board=%d", board[auxQueen.line][count]);
       }
-
+      printf("\nSaimos do for2\n");
+      printf("\nTop: (%d, %d); count=%d; top=(%d, %d)", auxQueen.line, auxQueen.col, count, top(st).line, top(st).col);
       if(count == 0 && auxQueen.line == n - 1) return 0;
 
-      board[auxQueen.line - 1][count - 1] = 0;
+      count--;
+      board[auxQueen.line - 1][count] = 0;
       st->v[count - 1].line++;
-      board[auxQueen.line][count - 1] = 1;
+      board[auxQueen.line][count] = 1;
 
     }else{
       board[i][count] = 1;
@@ -219,7 +224,7 @@ int main(){
     for(i = 0; i < j; i++){
       board[i] = malloc(j * sizeof(int));
     }
-    /*printf("\n%d %s", j, solveNQUtil(board, j, 0) ? "true" : "false");*/
+    /*printf("\n%d %s", j, recursive(board, j, 0) ? "true" : "false");*/
     backTrack(board, j);
     printMatrix(board, j, j);
   }

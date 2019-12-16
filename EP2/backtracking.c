@@ -68,13 +68,13 @@ queen unstack(stack* P){
   if (isEmpty(P)) printf("\nERROR:Tried to unstack empty stack\n");
   printStack(P);
   printf("\n}");
-  return P->v[P->top--];
+  return P->v[--P->top];
 }
 
 queen top(stack* P){
   if (isEmpty(P)) printf("\nERROR:Tried to get top of empty stack\n");
   printStack(P);
-  return (P->v[P->top]);
+  return (P->v[P->top - 1]);
 }
 
 //////////////////////////////////////////////

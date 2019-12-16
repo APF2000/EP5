@@ -54,12 +54,12 @@ int isEmpty(stack* P){
 }
 
 queen unstack(stack* P){
-  if (isEmpty(P)) printf("ERROR");
+  if (isEmpty(P)) printf("\nERROR:Tried to unstack empty stack\n");
   return P->v[P->top--];
 }
 
 queen top(stack* P){
-  if (isEmpty(P)) printf("ERRO");
+  if (isEmpty(P)) printf("\nERROR:Tried to get top of empty stack\n");
   return (P->v[P->top - 1]);
 }
 
@@ -166,23 +166,27 @@ int solveNQUtil(int **board, int n, int col){
 
 int backTrack(int **board, int n){
   stack* st = createStack(n);
-  int i, count = 0, queenPut;
+  int i, count = 0;
   queen auxQueen;
 
   while(count != n){
-    queenPut = 0;
-    for(i = 0; !isSafe(board, n, i, count) && i < n; i++);
+    printf("count=%d\nantes do for\n", count);
+    for(i = 0; i < n && !isSafe(board, n, i, count); i++);
+    printf("depois do for i=%d\n", i);
     if(i == n){
-      for(auxQueen = unstack(st); auxQueen != NULL && auxQueen.line == n - 1; count--)
+      for(auxQueen = unstack(st); auxQueen.line == n - 1; count--)
         board[auxQueen.line][count] = 0;
-      if(auxQueen != NULL) return 0;
+      if(count == 0 && auxQueen.line == n - 1) return 0;
+      board[auxQueen.line][count] = 0;
       auxQueen.line++;
     }else{
-      count++;
       board[i][count] = 1;
       createQueen(&auxQueen, i, count);
       stackUp(st, auxQueen);
+      count++;
     }
+    printMatrix(board, n, n);
+    printf("\n\n\n\n");
   }
   return 1;
 }

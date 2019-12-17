@@ -218,7 +218,7 @@ int main(){
   int **board;
   int i, j;
 
-  for(j = 4; j < 5; j++){
+  for(j = 10; j < 11; j++){
     /*printf("\n-- ----------------------\n");*/
     board = malloc(j * sizeof(int *));
     for(i = 0; i < j; i++){

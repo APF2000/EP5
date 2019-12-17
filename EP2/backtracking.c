@@ -193,15 +193,18 @@ int backTrack(int **board, int n){
         auxQueen = top(st);
         printf("\nNewTop: (%d, %d); count=%d", auxQueen.line, auxQueen.col, count);
       }
-      printf("\nSaimos do for2\n");
+      printf("\nSaimos do for2, count=%d\n", count);
       if(count == 0 && auxQueen.line == n - 1) return 0;
 
-      board[auxQueen.line][count - 1] = 0;
-      printf("\nantes(pilha-line):(%d, %d)", st->v[st->top].line,st->v[st->top].col);
-      st->v[st->top].line++;
-      printf("\ndepois(pilha-line):(%d, %d)", st->v[st->top].line,st->v[st->top].col);
-      board[auxQueen.line + 1][count - 1] = 1;
-
+      for(i = auxQueen.col; i > 0 && !isSafe(board, n, auxQueen.line, i); i--){
+        for(j = auxQueen.line; j < n && !isSafe(board, n, j, i); j++){
+          board[auxQueen.line][count - 1] = 0;
+          /*printf("\nantes(pilha):(%d, %d)", st->v[st->top].line,st->v[st->top].col);*/
+          st->v[st->top].line++;
+          /*printf("\ndepois(pilha):(%d, %d)", st->v[st->top].line,st->v[st->top].col);*/
+          board[auxQueen.line + 1][count - 1] = 1;
+        }
+      }
     }else{
       board[i][count] = 1;
       createQueen(&auxQueen, i, count);

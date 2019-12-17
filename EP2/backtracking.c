@@ -64,11 +64,11 @@ int isEmpty(stack* P){
 }
 
 queen unstack(stack* P){
-  printf("\nUstacking (%d, %d):{", P->v[P->top-1].line, P->v[P->top-1].col);
+  printf("\nUstacking (%d, %d):{", P->v[P->top].line, P->v[P->top].col);
   if (isEmpty(P)) printf("\nERROR:Tried to unstack empty stack\n");
   printStack(P);
   printf("\n}");
-  return P->v[--P->top];
+  return P->v[P->top--];
 }
 
 queen top(stack* P){
@@ -174,7 +174,7 @@ int recursive(int **board, int n, int col){
 
 int backTrack(int **board, int n){
   stack* st = createStack(n);
-  int i, count = 0, queenPut = 0;
+  int i, count = 0;
   queen auxQueen;
 
   while(count != n){
@@ -186,13 +186,12 @@ int backTrack(int **board, int n){
       printf("\nEntramos no for2?");
       for(auxQueen = top(st), printf("\nAuxqueenline=%d", auxQueen.line); count > 0 && auxQueen.line == n - 1; count--){
         printf("\nVoltando rainha, count=%d", count);
+        printf("\nAntes: board[%d][%d]=%d", auxQueen.line, count-1, board[auxQueen.line][count-1]);
+        board[auxQueen.line][count - 1] = 0;
+        printf("\nDepois: board[%d][%d]=%d", auxQueen.line, count-1, board[auxQueen.line][count-1]);
         unstack(st);
         auxQueen = top(st);
         printf("\nNewTop: (%d, %d); count=%d", auxQueen.line, auxQueen.col, count);
-        printf("\nAntes: board[%d][%d]", auxQueen.line, count);
-        board[auxQueen.line][count] = 0;
-        printf("\nDepois: board[%d][%d]", auxQueen.line, count);
-        printf("\nDepois, board=%d", board[auxQueen.line][count]);
       }
       printf("\nSaimos do for2\n");
       if(count == 0 && auxQueen.line == n - 1) return 0;

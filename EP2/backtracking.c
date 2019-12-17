@@ -229,20 +229,38 @@ int backTrack(int **board, int n){
   return 1;
 }
 
+int matrixEquality(int **M1, int **M2, int n){
+  int i, j;
+  for(i = 0; i < n; i++)
+    for(j = 0; j < n; j++)
+      if(M1[i][j] != M2[i][j])
+        return 0;
+  return 1;
+}
+
 int main(){
 
-  int **board;
-  int i, j;
+  int **board1, **board2;
+  int i, j, k;
 
   for(j = 10; j < 11; j++){
     /*printf("\n-- ----------------------\n");*/
-    board = malloc(j * sizeof(int *));
+    board1 = malloc(j * sizeof(int *));
+    board2 = malloc(j * sizeof(int *));
     for(i = 0; i < j; i++){
-      board[i] = malloc(j * sizeof(int));
+      board1[i] = malloc(j * sizeof(int));
+      board2[i] = malloc(j * sizeof(int));
+      for(k = 0; k < j; k++){
+        board1[i][k] = 0;
+        board2[i][k] = 0;
+      }
     }
-    /*printf("\n%d %s", j, recursive(board, j, 0) ? "true" : "false");*/
-    backTrack(board, j);
-    printMatrix(board, j, j);
+    printf("\n%d %s", j, recursive(board1, j, 0) ? "true" : "false");
+    backTrack(board2, j);
+    printMatrix(board1, j, j);
+    printMatrix(board2, j, j);
+
+    printf("\nMatrixs are equal? (%s)", matrixEquality(board1, board2, j)?"true":"false");
   }
 
   return 0;

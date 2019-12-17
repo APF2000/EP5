@@ -174,7 +174,7 @@ int recursive(int **board, int n, int col){
 
 int backTrack(int **board, int n){
   stack* st = createStack(n);
-  int i, count = 0;
+  int i, j, count = 0;
   queen auxQueen;
 
   while(count != n){
@@ -198,12 +198,22 @@ int backTrack(int **board, int n){
 
       for(i = auxQueen.col; i > 0 && !isSafe(board, n, auxQueen.line, i); i--){
         for(j = auxQueen.line; j < n && !isSafe(board, n, j, i); j++){
-          board[auxQueen.line][count - 1] = 0;
+          board[j][i] = 0;
           /*printf("\nantes(pilha):(%d, %d)", st->v[st->top].line,st->v[st->top].col);*/
           st->v[st->top].line++;
           /*printf("\ndepois(pilha):(%d, %d)", st->v[st->top].line,st->v[st->top].col);*/
-          board[auxQueen.line + 1][count - 1] = 1;
+          if( j < (n - 1) )
+            board[j + 1][i] = 1;
+          else
+            auxQueen = unstack(st);
         }
+        if(isSafe(board, n, j, i))
+          break;
+      }
+      if(isSafe(board, n, auxQueen.line, i)){
+        board[auxQueen.line][i] = 0;
+        st->v[st->top].line++;
+        board[auxQueen.line + 1][i] = 1;
       }
     }else{
       board[i][count] = 1;

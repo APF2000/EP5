@@ -74,7 +74,9 @@ queen unstack(stack* P){
 queen top(stack* P){
   if (isEmpty(P)) printf("\nERROR:Tried to get top of empty stack\n");
   printStack(P);
-  return (P->v[P->top - 1]);
+  printf("top:,(%d, %d), ", P->v[P->top].line, P->v[P->top].col);
+  printf("top-1:(%d, %d)", P->v[P->top - 1].line, P->v[P->top - 1].col);
+  return (P->v[P->top]);
 }
 
 //////////////////////////////////////////////
@@ -182,7 +184,7 @@ int backTrack(int **board, int n){
     printf("depois do for i=%d, n=%d\n", i, n);
     if(i == n){
       printf("\nEntramos no for2?");
-      for(auxQueen = top(st); count > 0 && auxQueen.line == n - 1; count--){
+      for(auxQueen = top(st), printf("\nAuxqueenline=%d", auxQueen.line); count > 0 && auxQueen.line == n - 1; count--){
         printf("\nVoltando rainha, count=%d", count);
         unstack(st);
         auxQueen = top(st);
@@ -193,13 +195,13 @@ int backTrack(int **board, int n){
         printf("\nDepois, board=%d", board[auxQueen.line][count]);
       }
       printf("\nSaimos do for2\n");
-      printf("\nTop: (%d, %d); count=%d; top=(%d, %d)", auxQueen.line, auxQueen.col, count, top(st).line, top(st).col);
       if(count == 0 && auxQueen.line == n - 1) return 0;
 
-      count--;
-      board[auxQueen.line - 1][count] = 0;
-      st->v[count - 1].line++;
-      board[auxQueen.line][count] = 1;
+      board[auxQueen.line][count - 1] = 0;
+      printf("\nantes(pilha-line):(%d, %d)", st->v[st->top].line,st->v[st->top].col);
+      st->v[st->top].line++;
+      printf("\ndepois(pilha-line):(%d, %d)", st->v[st->top].line,st->v[st->top].col);
+      board[auxQueen.line + 1][count - 1] = 1;
 
     }else{
       board[i][count] = 1;

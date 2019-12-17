@@ -197,20 +197,22 @@ int backTrack(int **board, int n){
       if(count == 0 && auxQueen.line == n - 1) return 0;
 
       for(i = auxQueen.col; i > 0 && !isSafe(board, n, auxQueen.line, i); i--){
+        printf("\nNovo for1, i=%d", i);
         for(j = auxQueen.line; j < n && !isSafe(board, n, j, i); j++){
+          printf("\nNovo for2, j=%d", j);
           board[j][i] = 0;
           /*printf("\nantes(pilha):(%d, %d)", st->v[st->top].line,st->v[st->top].col);*/
-          st->v[st->top].line++;
           /*printf("\ndepois(pilha):(%d, %d)", st->v[st->top].line,st->v[st->top].col);*/
-          if( j < (n - 1) )
+          if( j < (n - 1) ){
             board[j + 1][i] = 1;
-          else
+            st->v[st->top].line++;
+          }else
             auxQueen = unstack(st);
         }
-        if(isSafe(board, n, j, i))
+        if(isSafe(board, n, j - 1, i))
           break;
       }
-      if(isSafe(board, n, auxQueen.line, i)){
+      if(isSafe(board, n, auxQueen.line, i - 1)){
         board[auxQueen.line][i] = 0;
         st->v[st->top].line++;
         board[auxQueen.line + 1][i] = 1;

@@ -52,11 +52,8 @@ void resize(stack* P){
 
 void stackUp(stack* P, queen q){
   if (P->top == P->max) resize(P);
-  printf("Stacking up{ (%d, %d)\n", q.line, q.col);
-  printStack(P);
   P->top ++;
   P->v[P->top] = q;
-  printf("\n}");
 }
 
 int isEmpty(stack* P){
@@ -64,18 +61,12 @@ int isEmpty(stack* P){
 }
 
 queen unstack(stack* P){
-  printf("\nUstacking (%d, %d):{", P->v[P->top].line, P->v[P->top].col);
   if (isEmpty(P)) printf("\nERROR:Tried to unstack empty stack\n");
-  printStack(P);
-  printf("\n}");
   return P->v[P->top--];
 }
 
 queen top(stack* P){
   if (isEmpty(P)) printf("\nERROR:Tried to get top of empty stack\n");
-  printStack(P);
-  printf("top:,(%d, %d), ", P->v[P->top].line, P->v[P->top].col);
-  printf("top-1:(%d, %d)", P->v[P->top - 1].line, P->v[P->top - 1].col);
   return (P->v[P->top]);
 }
 
@@ -102,12 +93,9 @@ int inBounds(int verified, int n){
 int isSafe(int **board, int n, int line, int col){
   int i, auxLine, auxCol;
 
-  printf("\nIs it safe in (%d, %d)?\n", line, col);
-
   for(i = 0; i < n; i++)
     if((board[i][col] == 1 && i != line) ||
         (board[line][i] == 1 && i != col)){
-      printf("\nNot safe1\n");
       return 0;
     }
 
@@ -115,41 +103,32 @@ int isSafe(int **board, int n, int line, int col){
     auxLine = line  + i;
     auxCol  = col   + i;
     if(inBounds(auxLine, n) && inBounds(auxCol, n)){
-      /*printf("\nauxline=%d, auxcol=%d", auxLine, auxCol);*/
       if(board[auxLine][auxCol] == 1 && auxLine != line && auxCol != col){
-        printf("\nNot safe2\n");
         return 0;
       }
     }
     auxLine = line - i;
     auxCol  = col  - i;
     if(inBounds(auxLine, n) && inBounds(auxCol, n)){
-      /*printf("\nauxline=%d, auxcol=%d", auxLine, auxCol);*/
       if(board[auxLine][auxCol] == 1 && auxLine != line && auxCol != col){
-        printf("\nNot safe3\n");
         return 0;
       }
     }
     auxLine = line  + i;
     auxCol  = col   - i;
     if(inBounds(auxLine, n) && inBounds(auxCol, n)){
-      /*printf("\nauxline=%d, auxcol=%d", auxLine, auxCol);*/
       if(board[auxLine][auxCol] == 1 && auxLine != line && auxCol != col){
-        printf("\nNot safe4\n");
         return 0;
       }
     }
     auxLine = line - i;
     auxCol  = col  + i;
     if(inBounds(auxLine, n) && inBounds(auxCol, n)){
-      /*printf("\nauxline=%d, auxcol=%d", auxLine, auxCol);*/
       if(board[auxLine][auxCol] == 1 && auxLine != line && auxCol != col){
-        printf("\nNot safe5\n");
         return 0;
       }
     }
   }
-  printf("\nYes\n");
   return 1;
 }
 
@@ -163,7 +142,6 @@ int recursive(int **board, int n, int col){
   for(i = 0; i < n; i++){
     if(isSafe(board, n, i, col)){
       board[i][col] = 1;
-      //printMatrix(board, n, n);
 
       if(recursive(board, n, col+1))
         return 1;
@@ -178,61 +156,33 @@ int backTrack(int **board, int n){
   stack* st = createStack(n);
   int i, j, count = 0;
   queen auxQueen, lastQueen;
-  int /*stop,*/ queenPut = 0;
+  int queenPut = 0;
 
   while(count != n){
-    /*scanf("%d", &stop);*/
-    printStack(st);
-    printf("\n------------------------------\n");
-    printf("count=%d\nantes do for\n", count);
     for(i = 0; i < n && !isSafe(board, n, i, count); i++);
-    printf("depois do for i=%d, n=%d\n", i, n);
+
     if(i == n){
       queenPut = 0;
-      printf("\ni==n\n");
-      for(auxQueen = top(st), printf("\nAuxqueen=(%d, %d)", auxQueen.line, auxQueen.col); count > 0 && auxQueen.line == n - 1; count--){
-        printf("\nEntramos no for2?");
-        printf("\nVoltando rainha, count=%d", count);
-        printf("\nAntes: board[%d][%d]=%d", auxQueen.line, count-1, board[auxQueen.line][count-1]);
+      for(auxQueen = top(st); count > 0 && auxQueen.line == n - 1; count--){
         board[auxQueen.line][auxQueen.col] = 0;
-        printf("\nDepois: board[%d][%d]=%d", auxQueen.line, count-1, board[auxQueen.line][count-1]);
-        printMatrix(board, n, n);
         lastQueen = unstack(st);
-        printf("\n\n\ncount=%d\n\n\n", count);
         auxQueen = top(st);
-        printf("\nNewTop: (%d, %d); count=%d", auxQueen.line, auxQueen.col, count);
       }
-      printf("\n\n\ncount=%d\n\n\n", count);
-      printf("\nSaimos do for2, count=%d\n", count);
       if(count == 0 && lastQueen.line == (n - 1)){
-        printf("\nImpossivel em R, count=%d, lastqueenline=%d", count, lastQueen.line);
-        printMatrix(board, n, n);
         return 0;
       }
 
-      printMatrix(board, n, n);
       for(i = auxQueen.col; i > 0 && !isSafe(board, n, auxQueen.line + 1, i); i--){
-        printMatrix(board, n, n);
+
         board[auxQueen.line][i] = 0;
-        printf("\nMagic!! Sumiu!");
-        printMatrix(board, n, n);
-        printf("\nNovo for1, i=%d", i);
+
         for(j = auxQueen.line + 1; j < n && !queenPut && !isSafe(board, n, j, i); j++){
-          printf("\nNovo for2, j=%d", j);
-          printf("\nj<n:%d, !isSafe(j=%d, i=%d)", j<n, j, i);
 
           board[j][i] = 0;
-          /*printf("\nantes(pilha):(%d, %d)", st->v[st->top].line,st->v[st->top].col);*/
-          /*printf("\ndepois(pilha):(%d, %d)", st->v[st->top].line,st->v[st->top].col);*/
-          printf("\nAntes do IF");
-          if( j < (n - 1) ){
-            printf("\nj < n-1");
-            //board[j][i] = 1;
-            st->v[st->top].line++;
-            printMatrix(board, n, n);
 
+          if( j < (n - 1) ){
+            st->v[st->top].line++;
           }else{
-            printf("\nj >= n-1");
             unstack(st);
             count--;
             printf("\n\n\ncount=%d\n\n\n", count);
@@ -308,7 +258,7 @@ int main(){
   int **board1, **board2;
   int i, j, k, get;
 
-  for(j = 2; j < 4; j++){
+  for(j = 1; j < 12; j++){
     scanf("%d", &get);
     /*printf("\n-- ----------------------\n");*/
     board1 = malloc(j * sizeof(int *));

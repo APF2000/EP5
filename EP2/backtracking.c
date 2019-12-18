@@ -177,11 +177,11 @@ int recursive(int **board, int n, int col){
 int backTrack(int **board, int n){
   stack* st = createStack(n);
   int i, j, count = 0;
-  queen auxQueen;
-  int stop, queenPut = 0;
+  queen auxQueen, lastQueen;
+  int /*stop,*/ queenPut = 0;
 
   while(count != n){
-    scanf("%d", &stop);
+    //scanf("%d", &stop);
     printStack(st);
     printf("\n------------------------------\n");
     printf("count=%d\nantes do for\n", count);
@@ -193,16 +193,20 @@ int backTrack(int **board, int n){
       for(auxQueen = top(st), printf("\nAuxqueen=(%d, %d)", auxQueen.line, auxQueen.col); count > 0 && auxQueen.line == n - 1; count--){
         printf("\nEntramos no for2?");
         printf("\nVoltando rainha, count=%d", count);
-        printf(" \nAntes: board[%d][%d]=%d", auxQueen.line, count-1, board[auxQueen.line][count-1]);
+        printf("\nAntes: board[%d][%d]=%d", auxQueen.line, count-1, board[auxQueen.line][count-1]);
         board[auxQueen.line][count - 1] = 0;
         printf("\nDepois: board[%d][%d]=%d", auxQueen.line, count-1, board[auxQueen.line][count-1]);
-        unstack(st);
+        lastQueen = unstack(st);
         printf("\n\n\ncount=%d\n\n\n", count);
         auxQueen = top(st);
         printf("\nNewTop: (%d, %d); count=%d", auxQueen.line, auxQueen.col, count);
       }
+      printf("\n\n\ncount=%d\n\n\n", count);
       printf("\nSaimos do for2, count=%d\n", count);
-      if(count == 0 && auxQueen.line == n - 1) return 0;
+      if(count == 0 && lastQueen.line == n - 1){
+        printf("\nImpossivel em R");
+        return 0;
+      }
 
       printMatrix(board, n, n);
       for(i = auxQueen.col; i > 0 && !isSafe(board, n, auxQueen.line + 1, i); i--){
@@ -299,7 +303,7 @@ int main(){
   int **board1, **board2;
   int i, j, k;
 
-  for(j = 6; j < 7; j++){
+  for(j = 3; j < 4; j++){
     /*printf("\n-- ----------------------\n");*/
     board1 = malloc(j * sizeof(int *));
     board2 = malloc(j * sizeof(int *));

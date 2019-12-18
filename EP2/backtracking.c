@@ -259,7 +259,10 @@ int backTrack(int **board, int n){
           printf("\n\n\ncount=%d\n\n\n", count);
           printMatrix(board, n, n);
           auxQueen = top(st);
-          if(count == -1) return 0;
+          if(count == -1){
+            printf("\nImpossivel, mas por algum outro motivo");
+            return 0;
+          }
           i--;
         }
       }
@@ -305,7 +308,7 @@ int main(){
   int **board1, **board2;
   int i, j, k, get;
 
-  for(j = 4; j < 14; j++){
+  for(j = 2; j < 4; j++){
     scanf("%d", &get);
     /*printf("\n-- ----------------------\n");*/
     board1 = malloc(j * sizeof(int *));

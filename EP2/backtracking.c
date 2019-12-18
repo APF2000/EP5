@@ -184,50 +184,34 @@ int backTrack(int **board, int n){
             st->v[st->top].line++;
           }else{
             unstack(st);
-            count--;
-            printf("\n\n\ncount=%d\n\n\n", count);
-            auxQueen = top(st);
+            count--;auxQueen = top(st);
           }
-          printf("\nDepois do IF");
         }
-        printf("\nFim do for2, queenPut=%d", queenPut);
         if(j == n) j--;
         if(isSafe(board, n, j, i) && !queenPut){
           board[j][i] = 1;
-          //count++;
-          printf("\n\n\ncount=%d\n\n\n", count);
           st->v[st->top].line++;
-          printMatrix(board, n, n);
           queenPut = 1;
           break;
         }
         while(auxQueen.line == (n - 1) && !queenPut){
-          printf("\nTirando as pontas de baixo");
+
           board[auxQueen.line][auxQueen.col] = 0;
           unstack(st);
           count--;
-          printf("\n\n\ncount=%d\n\n\n", count);
-          printMatrix(board, n, n);
           auxQueen = top(st);
           if(count == -1){
-            printf("\nImpossivel, mas por algum outro motivo");
             return 0;
           }
           i--;
         }
       }
-      printf("\nFim do for1, queenPut=%d", queenPut);
       if(i < 0) i++;
       if(!queenPut){
-        printf("\nqueenPut=%d, auxqueen=(%d, %d)", queenPut, auxQueen.line, auxQueen.col);
         board[auxQueen.line][auxQueen.col] = 0;
         if(isSafe(board, n, auxQueen.line, i)){
-          //board[auxQueen.line][i] = 0;
           st->v[st->top].line++;
           board[auxQueen.line + 1][i] = 1;
-          //count++;
-          printf("\n\n\ncount=%d\n\n\n", count);
-          printMatrix(board, n, n);
           queenPut = 1;
         }
       }
@@ -236,10 +220,7 @@ int backTrack(int **board, int n){
       createQueen(&auxQueen, i, count);
       stackUp(st, auxQueen);
       count++;
-      printf("\n\n\ncount=%d\n\n\n", count);
     }
-    printMatrix(board, n, n);
-    printf("\n\n");
   }
   return 1;
 }
@@ -256,11 +237,11 @@ int matrixEquality(int **M1, int **M2, int n){
 int main(){
 
   int **board1, **board2;
-  int i, j, k, get;
+  int i, j, k, get, result;
 
   for(j = 1; j < 12; j++){
     scanf("%d", &get);
-    /*printf("\n-- ----------------------\n");*/
+    printf("\n-----------------------------\n");
     board1 = malloc(j * sizeof(int *));
     board2 = malloc(j * sizeof(int *));
     for(i = 0; i < j; i++){
@@ -271,12 +252,13 @@ int main(){
         board2[i][k] = 0;
       }
     }
-    printf("\n%d %s", j, recursive(board1, j, 0) ? "true" : "false");
+    result = recursive(board1, j, 0);
     backTrack(board2, j);
     printMatrix(board1, j, j);
     printMatrix(board2, j, j);
 
     printf("\nMatrixs are equal? (%s)", matrixEquality(board1, board2, j)?"true":"false");
+    printf("\nImpossible? %s", result ? "No" : "Yes");
   }
 
   return 0;

@@ -181,7 +181,7 @@ int backTrack(int **board, int n){
   int /*stop,*/ queenPut = 0;
 
   while(count != n){
-    //scanf("%d", &stop);
+    /*scanf("%d", &stop);*/
     printStack(st);
     printf("\n------------------------------\n");
     printf("count=%d\nantes do for\n", count);
@@ -194,8 +194,9 @@ int backTrack(int **board, int n){
         printf("\nEntramos no for2?");
         printf("\nVoltando rainha, count=%d", count);
         printf("\nAntes: board[%d][%d]=%d", auxQueen.line, count-1, board[auxQueen.line][count-1]);
-        board[auxQueen.line][count - 1] = 0;
+        board[auxQueen.line][auxQueen.col] = 0;
         printf("\nDepois: board[%d][%d]=%d", auxQueen.line, count-1, board[auxQueen.line][count-1]);
+        printMatrix(board, n, n);
         lastQueen = unstack(st);
         printf("\n\n\ncount=%d\n\n\n", count);
         auxQueen = top(st);
@@ -203,8 +204,9 @@ int backTrack(int **board, int n){
       }
       printf("\n\n\ncount=%d\n\n\n", count);
       printf("\nSaimos do for2, count=%d\n", count);
-      if(count == 0 && lastQueen.line == n - 1){
-        printf("\nImpossivel em R");
+      if(count == 0 && lastQueen.line == (n - 1)){
+        printf("\nImpossivel em R, count=%d, lastqueenline=%d", count, lastQueen.line);
+        printMatrix(board, n, n);
         return 0;
       }
 
@@ -301,9 +303,10 @@ int matrixEquality(int **M1, int **M2, int n){
 int main(){
 
   int **board1, **board2;
-  int i, j, k;
+  int i, j, k, get;
 
-  for(j = 3; j < 4; j++){
+  for(j = 4; j < 14; j++){
+    scanf("%d", &get);
     /*printf("\n-- ----------------------\n");*/
     board1 = malloc(j * sizeof(int *));
     board2 = malloc(j * sizeof(int *));

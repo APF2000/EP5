@@ -178,15 +178,17 @@ int backTrack(int **board, int n){
   stack* st = createStack(n);
   int i, j, count = 0;
   queen auxQueen;
-  int stop;
+  int stop, queenPut = 0;
 
   while(count != n){
     scanf("%d", &stop);
+    printStack(st);
     printf("\n------------------------------\n");
     printf("count=%d\nantes do for\n", count);
     for(i = 0; i < n && !isSafe(board, n, i, count); i++);
     printf("depois do for i=%d, n=%d\n", i, n);
     if(i == n){
+      queenPut = 0;
       printf("\ni==n\n");
       for(auxQueen = top(st), printf("\nAuxqueen=(%d, %d)", auxQueen.line, auxQueen.col); count > 0 && auxQueen.line == n - 1; count--){
         printf("\nEntramos no for2?");
@@ -195,6 +197,7 @@ int backTrack(int **board, int n){
         board[auxQueen.line][count - 1] = 0;
         printf("\nDepois: board[%d][%d]=%d", auxQueen.line, count-1, board[auxQueen.line][count-1]);
         unstack(st);
+        printf("\n\n\ncount=%d\n\n\n", count);
         auxQueen = top(st);
         printf("\nNewTop: (%d, %d); count=%d", auxQueen.line, auxQueen.col, count);
       }
@@ -203,41 +206,78 @@ int backTrack(int **board, int n){
 
       printMatrix(board, n, n);
       for(i = auxQueen.col; i > 0 && !isSafe(board, n, auxQueen.line + 1, i); i--){
-        board[auxQueen.line][auxQueen.col] = 0;
+        printMatrix(board, n, n);
+        board[auxQueen.line][i] = 0;
+        printf("\nMagic!! Sumiu!");
         printMatrix(board, n, n);
         printf("\nNovo for1, i=%d", i);
-        for(j = auxQueen.line + 1; j < n && !isSafe(board, n, j, i); j++){
+        for(j = auxQueen.line + 1; j < n && !queenPut && !isSafe(board, n, j, i); j++){
           printf("\nNovo for2, j=%d", j);
           printf("\nj<n:%d, !isSafe(j=%d, i=%d)", j<n, j, i);
 
-          board[j - 1][i] = 0;
+          board[j][i] = 0;
           /*printf("\nantes(pilha):(%d, %d)", st->v[st->top].line,st->v[st->top].col);*/
           /*printf("\ndepois(pilha):(%d, %d)", st->v[st->top].line,st->v[st->top].col);*/
-          if( j < (n /*- 1*/) ){
-            board[j][i] = 1;
+          printf("\nAntes do IF");
+          if( j < (n - 1) ){
+            printf("\nj < n-1");
+            //board[j][i] = 1;
             st->v[st->top].line++;
             printMatrix(board, n, n);
-          }/*else{
+
+          }else{
+            printf("\nj >= n-1");
+            unstack(st);
+            count--;
+            printf("\n\n\ncount=%d\n\n\n", count);
             auxQueen = top(st);
-            //count--;
-          }*/
+          }
+          printf("\nDepois do IF");
         }
-        if(isSafe(board, n, j - 1, i)){
-          board[j - 1][i] = 1;
+        printf("\nFim do for2, queenPut=%d", queenPut);
+        if(j == n) j--;
+        if(isSafe(board, n, j, i) && !queenPut){
+          board[j][i] = 1;
+          //count++;
+          printf("\n\n\ncount=%d\n\n\n", count);
+          st->v[st->top].line++;
           printMatrix(board, n, n);
+          queenPut = 1;
           break;
         }
+        while(auxQueen.line == (n - 1) && !queenPut){
+          printf("\nTirando as pontas de baixo");
+          board[auxQueen.line][auxQueen.col] = 0;
+          unstack(st);
+          count--;
+          printf("\n\n\ncount=%d\n\n\n", count);
+          printMatrix(board, n, n);
+          auxQueen = top(st);
+          if(count == -1) return 0;
+          i--;
+        }
       }
-      if(isSafe(board, n, auxQueen.line, i - 1)){
-        board[auxQueen.line][i] = 0;
-        st->v[st->top].line++;
-        board[auxQueen.line + 1][i] = 1;
+      printf("\nFim do for1, queenPut=%d", queenPut);
+      if(i < 0) i++;
+      if(!queenPut){
+        printf("\nqueenPut=%d, auxqueen=(%d, %d)", queenPut, auxQueen.line, auxQueen.col);
+        board[auxQueen.line][auxQueen.col] = 0;
+        if(isSafe(board, n, auxQueen.line, i)){
+          //board[auxQueen.line][i] = 0;
+          st->v[st->top].line++;
+          board[auxQueen.line + 1][i] = 1;
+          //count++;
+          printf("\n\n\ncount=%d\n\n\n", count);
+          printMatrix(board, n, n);
+          queenPut = 1;
+        }
       }
     }else{
       board[i][count] = 1;
       createQueen(&auxQueen, i, count);
       stackUp(st, auxQueen);
       count++;
+      printf("\n\n\ncount=%d\n\n\n", count);
     }
     printMatrix(board, n, n);
     printf("\n\n");
@@ -259,7 +299,7 @@ int main(){
   int **board1, **board2;
   int i, j, k;
 
-  for(j = 5; j < 7; j++){
+  for(j = 6; j < 7; j++){
     /*printf("\n-- ----------------------\n");*/
     board1 = malloc(j * sizeof(int *));
     board2 = malloc(j * sizeof(int *));
